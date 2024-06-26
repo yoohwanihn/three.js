@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Cube Animating</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="module">
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js';
+
+        const scene = new THREE.Scene();
+        
+        //시야각(field of view) 75, 종횡비(aspect ratio) / near 0.1 (near보다 가까운 요소 렌더링 X) , far 1000 (far 보다 먼 요소 렌더링 X)
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        //Three.js는 WebGLRenderer등 다양한 렌더러를 사용한다. 오래된 브라우저 등 WebGL을 지원 안하는 경우를 대비.
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const geometry = new THREE.BoxGeometry(1, 1, 1);    //꼭짓점(vertices)과 면(faces)
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });    //Mesh Color (Green)
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        camera.position.z = 5; // scene.add()를 불러오면 기본 설정상 추가된 모든 것들은(0, 0, 0) 속성을 갖고 이를 방지(카메라 포지션 이동)
+
+        //three.js는 setInterval을 사용하지 않고 requestAnimationFrame을 사용함.
+        //유저가 브라우저 창을 이탈했을때 멈춰주는 기능을 통해 전력, 배터리를 아낄 수 있음.
+        function animate() {
+            requestAnimationFrame(animate); // 1초에 60번 실행함.
+
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>

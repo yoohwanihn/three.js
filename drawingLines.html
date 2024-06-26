@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>drawingLines</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="module">
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js';
+
+        const scene = new THREE.Scene();
+        
+        //시야각(field of view) 45, 종횡비(aspect ratio) / near 1 (near보다 가까운 요소 렌더링 X) , far 500 (far 보다 먼 요소 렌더링 X)
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
+        camera.position.set(0, 0, 100);
+        camera.lookAt(0, 0, 0);
+
+        //Three.js는 WebGLRenderer등 다양한 렌더러를 사용한다. 오래된 브라우저 등 WebGL을 지원 안하는 경우를 대비.
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        //LineBasicMaterial 또는 LineDashedMaterial 사용.
+        const material = new THREE.LineBasicMaterial( { color: 0x0000ff} );
+
+        const points = [];
+        points.push( new THREE.Vector3(-10, 0, 0));
+        points.push( new THREE.Vector3(0, 10, 0));
+        points.push( new THREE.Vector3(10, 0, 0));
+
+        //geometry에 points 추가
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+        //points(점)과 geometry를 합쳐서 라인 그리기
+        const line = new THREE.Line( geometry, material);
+
+        //line을 scene에 추가하고 render
+        scene.add(line);
+        renderer.render(scene, camera);
+
+    </script>
+</body>
+
+</html>
