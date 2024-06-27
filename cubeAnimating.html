@@ -20,7 +20,7 @@
         import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js';
 
         const scene = new THREE.Scene();
-        
+
         //시야각(field of view) 75, 종횡비(aspect ratio) / near 0.1 (near보다 가까운 요소 렌더링 X) , far 1000 (far 보다 먼 요소 렌더링 X)
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
