@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>variables</title>
+    <title>lineBasic</title>
     <style>
         * {
             margin: 0;
@@ -34,53 +34,47 @@
     <div id="threejs-container"></div>
     <script type="module">
         import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js';
-
-        // controls
+        // GUI
         const gui = new dat.GUI()
-        // sizes
+        
         let width = window.innerWidth
         let height = window.innerHeight
-        // scene
+        
         const scene = new THREE.Scene()
         scene.background = new THREE.Color(0x262626)
-        // camera
+        
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100)
-        camera.position.set(0, 0, 10)
-        const camFolder = gui.addFolder('카메라')
-        camFolder.add(camera.position, 'z').min(10).max(60).step(10)
-        // cube
-        const geometry = new THREE.BoxGeometry(2, 2, 2)
-        const material = new THREE.MeshBasicMaterial({
+        camera.position.set(0, 0, 50)
+        camera.lookAt(0, 0, 0)
+        const camFolder = gui.addFolder('Camera')
+        camFolder.add(camera.position, 'z', 10, 100)
+        camFolder.open()
+        
+        const points = []
+        points.push(new THREE.Vector3(-10, 0, 0))
+        points.push(new THREE.Vector3(0, -20, 0))
+        points.push(new THREE.Vector3(10, 0, 0))
+        const folders = [gui.addFolder('Poin 1'), gui.addFolder('Poin 2'), gui.addFolder('Poin 3')]
+        folders.forEach((folder, i) => {
+            folder.add(points[i], 'x', -30, 30, 1).onChange(redraw)
+            folder.add(points[i], 'y', -30, 30, 1).onChange(redraw)
+            folder.add(points[i], 'z', -30, 30, 1).onChange(redraw)
+            folder.open()
+        })
+        const geometry = new THREE.BufferGeometry().setFromPoints(points)
+        const material = new THREE.LineBasicMaterial({
             color: 0xffffff,
-            wireframe: true
+            linewidth: 2
         })
-        const cubeColor = {
-            color: 0xffffff
+        const line = new THREE.Line(geometry, material)
+        line.position.set(0, 10, 0)
+        scene.add(line)
+        function redraw() {
+            let newGeometry = new THREE.BufferGeometry().setFromPoints(points)
+            line.geometry.dispose()
+            line.geometry = newGeometry
         }
-        const materialFolder = gui.addFolder('Material(색상, 투명도 등)')
-        materialFolder.add(material, 'wireframe')
-        materialFolder.addColor(cubeColor, 'color').onChange(() => {
-            // callback
-            material.color.set(cubeColor.color)
-        })
-        materialFolder.open()
-        const cube = new THREE.Mesh(geometry, material)
-        scene.add(cube)
-        const cubeFolder = gui.addFolder('큐브')
-        // for position
-        const posFolder = cubeFolder.addFolder('위치')
-        posFolder.add(cube.position, 'x', 0, 5, 0.1)
-        posFolder.add(cube.position, 'y', 0, 5, 0.1)
-        posFolder.add(cube.position, 'z', 0, 5, 0.1)
-        posFolder.open()
-        // for scale
-        const scaleFolder = cubeFolder.addFolder('크기')
-        scaleFolder.add(cube.scale, 'x', 0, 5, 0.1).name('Width')
-        scaleFolder.add(cube.scale, 'y', 0, 5, 0.1).name('Height')
-        scaleFolder.add(cube.scale, 'z', 0, 5, 0.1).name('Depth')
-        scaleFolder.open()
-        cubeFolder.open()
-        // 화면 조절 center
+        // 이벤트 리스너 (화면 조절 center)
         window.addEventListener('resize', () => {
             width = window.innerWidth
             height = window.innerHeight
@@ -96,11 +90,8 @@
         // 애니메이션
         function animate() {
             requestAnimationFrame(animate)
-            cube.rotation.x += 0.005
-            cube.rotation.y += 0.01
             renderer.render(scene, camera)
         }
-        
         // scene 렌더링
         const container = document.querySelector('#threejs-container')
         container.append(renderer.domElement)
