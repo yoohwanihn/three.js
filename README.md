@@ -1,8 +1,16 @@
-# three.js
-npm install --save three
+# vite npm install
+![image](https://github.com/yoohwanihn/three.js/assets/73772238/5a8ba70c-fdd6-45cf-8b9d-6394910ccbdd) <br>
+![image](https://github.com/yoohwanihn/three.js/assets/73772238/5c58ddc4-b9b0-459a-b7af-c9fad8ed2f3e) <br>
+![image](https://github.com/yoohwanihn/three.js/assets/73772238/055ddc2e-a866-437d-a779-b5bdbd271d0c) <br>
+![image](https://github.com/yoohwanihn/three.js/assets/73772238/6b3ebc28-4663-4ff3-bdc7-4fbc6f62a738) <br>
+![image](https://github.com/yoohwanihn/three.js/assets/73772238/02219897-bbd5-4b01-bb5d-51eda8a12312) <br>
 
-# vite
-npm install --save-dev vite
+# three.js npm install
+![image](https://github.com/yoohwanihn/three.js/assets/73772238/ce9614df-2d19-4ee1-8364-44750dabaa58) <br>
+![image](https://github.com/yoohwanihn/three.js/assets/73772238/6b5c3f05-4624-415a-bbef-dfd283e75e6b) <br>
+
+# run
+![image](https://github.com/yoohwanihn/three.js/assets/73772238/d36e60f7-93ed-4941-bfc1-8c2425fa2dbf) <br>
 
 
 
@@ -24,3 +32,6 @@ https://github.com/mrdoob/three.js/tree/master
 
 # 1. Cube_Rotation 
 https://yoohwanihn.tistory.com/55
+
+# 2. Geometry
+https://yoohwanihn.tistory.com/56
