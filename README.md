@@ -34,6 +34,6 @@ https://github.com/mrdoob/three.js/tree/master
 https://yoohwanihn.tistory.com/55
 
 # 2. Geometry
-https://yoohwanihn.tistory.com/56
-https://yoohwanihn.tistory.com/57
-https://yoohwanihn.tistory.com/58
+https://yoohwanihn.tistory.com/56 <br>
+https://yoohwanihn.tistory.com/57 <br>
+https://yoohwanihn.tistory.com/58 <br>
