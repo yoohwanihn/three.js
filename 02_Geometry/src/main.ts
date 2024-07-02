@@ -1,14 +1,158 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
-import './style.css'
 import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js'
+import './style.css'
+import{ TTFLoader, Font } from 'three/examples/jsm/Addons.js'
+import{ TextGeometry } from 'three/examples/jsm/Addons.js'
 
 interface IGeometryHelper {
   createGeometry: () => THREE.BufferGeometry
   createGUI: (update: () => void) => void
 }
 
-class BoxGeometryHelper implements IGeometryHelper{
+class TextGeometryHelper implements IGeometryHelper{
+  private args = {
+    text: "chita yoohwanihn",
+    size: .5,
+    height: .1,
+    curveSegments: 2,
+    bevelSegments: 3,
+    bevelThickness: 0.1,
+    bevelSize: .01,
+    bevelOffset: 0,
+    bevelEnabled: true
+  }
+
+  private font: Font
+
+  constructor(font: Font){
+    this.font = font
+  }
+
+  public createGeometry(){
+
+    //text 정보, font정보와 그 외 args넘겨줌
+    const geometry = new TextGeometry(this.args.text,{
+      font: this.font,
+      ...this.args
+    })
+
+    geometry.center() // 가운데 정렬
+
+    return geometry;
+  }
+
+  public createGUI(update: () => void){
+    const gui = new GUI()
+    gui.add(this.args, "text").onChange(update) // text 상태. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "size", 0.1, 1, 0.01).onChange(update) // size의 범위 0.1~1 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "height", 0.1, 1, 0.01).onChange(update) // height의 범위 0.1~1 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "curveSegments", 1, 32, 1).onChange(update) // curveSegments 범위 1~32 , 1 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "bevelSegments", 1, 32, 1).onChange(update) // bevelSegments 범위 1~32 , 1 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "bevelThickness", 0.01, 1, 0.001).onChange(update) // bevelThickness 범위 0.01~1 , 0.001 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "bevelSize", 0.01, 1, 0.001).onChange(update) // bevelSize 범위 0.01~1 , 0.001 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "bevelOffset", -1, 1, 0.001).onChange(update) // bevelOffset 범위 -1~1 , 0.001 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "bevelEnabled").onChange(update) // bevelEnabled 상태. 값이 변경시 createModel 함수 호출
+    }
+}
+class CylinderGeometryHelper implements IGeometryHelper {
+  private args = {
+    radiusTop: .5,
+    radiusBottom: .5,
+    height: 1,
+    radialSegments: 8,
+    heightSegments: 1,
+    openEnded: false,
+    thetaStart: 0,
+    thetaLength: 360
+  }
+
+  public createGeometry() {
+    return new THREE.CylinderGeometry(
+      this.args.radiusTop,
+      this.args.radiusBottom,
+      this.args.height,
+      this.args.radialSegments,
+      this.args.heightSegments,
+      this.args.openEnded,
+      THREE.MathUtils.degToRad(this.args.thetaStart),
+      THREE.MathUtils.degToRad(this.args.thetaLength)
+    )
+  }
+
+  public createGUI(update: () => void) {
+    const gui = new GUI()
+    gui.add(this.args, "radiusTop", 0, 2, 0.01).onChange(update) // radiusTop의 범위 0~2 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "radiusBottom", 0, 2, 0.01).onChange(update) // radiusBottom의 범위 0~2 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "height", 1, 2, 0.01).onChange(update) // height의 범위 1~2 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "radialSegments", 3, 64, 1).onChange(update) // radialSegments 범위 3~64 , 1 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "heightSegments", 1, 64, 1).onChange(update) // heightSegments 범위 1~64 , 1 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "openEnded").onChange(update) // openEnded 상태. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "thetaStart", 0, 360).onChange(update) // thetaStart 범위 0~360 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "thetaLength", 0, 360).onChange(update) // thetaLength 범위 0~360 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+  }
+}
+
+class ConeGeometryHelper implements IGeometryHelper {
+  private args = {
+    radius: 0.5,
+    height: 1,
+    radialSegments: 8,
+    heightSegments: 1,
+    openEnded: false,
+    thetaStart: 0,
+    thetaLength: 360
+  }
+  public createGeometry() {
+    return new THREE.ConeGeometry(
+      this.args.radius,
+      this.args.height,
+      this.args.radialSegments,
+      this.args.heightSegments,
+      this.args.openEnded,
+      THREE.MathUtils.degToRad(this.args.thetaStart),
+      THREE.MathUtils.degToRad(this.args.thetaLength)
+    )
+  }
+  public createGUI(update: () => void) {
+    const gui = new GUI()
+    gui.add(this.args, "radius", 0.1, 1, 0.01).onChange(update) // radius의 범위 0.1~1 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "height", 0.1, 2, 0.01).onChange(update) // height의 범위 0.1~2 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "radialSegments", 1, 64, 1).onChange(update) // radialSegments의 범위 1~64 , 1 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "heightSegments", 1, 64, 1).onChange(update) // heightSegments 범위 1~64 , 1 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "openEnded").onChange(update) // openEnded 상태. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "thetaStart", 0, 360, 0.1).onChange(update) // depthSegments 범위 0~360 , 0.1 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "thetaLength", 0, 360, 0.1).onChange(update) // depthSegments 범위 0~360 , 0.1 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+  }
+
+}
+
+class CircleGeometryHelper implements IGeometryHelper {
+  private args = {
+    radius: 1,
+    segments: 32,
+    thetaStart: 0,
+    thetaLength: 360
+  }
+  public createGeometry() {
+    return new THREE.CircleGeometry(
+      this.args.radius,
+      this.args.segments,
+      THREE.MathUtils.degToRad(this.args.thetaStart),
+      THREE.MathUtils.degToRad(this.args.thetaLength)
+    )
+
+  }
+  public createGUI(update: () => void) {
+    const gui = new GUI()
+    gui.add(this.args, "radius", 0.1, 1, 0.01).onChange(update) // radius의 범위 0.1~1 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "segments", 1, 64, 0.01).onChange(update) // segments의 범위 1~64 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "thetaStart", 0, 360, 0.01).onChange(update) // thetaStart의 범위 0~360 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+    gui.add(this.args, "thetaLength", 0, 360, 0.01).onChange(update) // thetaLength 범위 0~360 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
+  }
+}
+
+class BoxGeometryHelper implements IGeometryHelper {
   private args = {
     width: 1,
     height: 1,
@@ -18,11 +162,11 @@ class BoxGeometryHelper implements IGeometryHelper{
     depthSegments: 1
   }
 
-  createGeometry() {
+  public createGeometry() {
     return new THREE.BoxGeometry(this.args.width, this.args.height, this.args.depth, this.args.widthSegments, this.args.heightSegments, this.args.depthSegments)
 
   }
-  createGUI(update: () => void){
+  public createGUI(update: () => void) {
     const gui = new GUI()
     gui.add(this.args, "width", 0.1, 10, 0.01).onChange(update) // width의 범위 0.1~10 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
     gui.add(this.args, "height", 0.1, 10, 0.01).onChange(update) // height의 범위 0.1~10 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
@@ -31,7 +175,6 @@ class BoxGeometryHelper implements IGeometryHelper{
     gui.add(this.args, "heightSegments", 0.1, 10, 0.01).onChange(update) // heightSegments 범위 0.1~10 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
     gui.add(this.args, "depthSegments", 0.1, 10, 0.01).onChange(update) // depthSegments 범위 0.1~10 , 0.01 단위로 변경 가능. 값이 변경시 createModel 함수 호출
   }
-
 }
 
 class App {
@@ -60,7 +203,7 @@ class App {
     this.setupHelpers()
   }
 
-  private setupHelpers(){
+  private setupHelpers() {
     const axes = new THREE.AxesHelper(10) // 좌표축의 크기. 10
     this.scene.add(axes);
 
@@ -92,7 +235,7 @@ class App {
     new OrbitControls(this.camera!, this.domApp! as HTMLElement)  // 카메라와, 마우스 이벤트를 수행할 DOM 객체
   }
 
-  private setupModels() {
+  private async setupModels() {
     const meshMaterial = new THREE.MeshPhongMaterial({
       color: 0x156289,
       flatShading: true,
@@ -107,12 +250,19 @@ class App {
       opacity: 0.8
     })
 
-    const geometryHelper = new BoxGeometryHelper()
+    //const geometryHelper = new BoxGeometryHelper()
+    //const geometryHelper = new CircleGeometryHelper()
+    //const geometryHelper = new ConeGeometryHelper()
+    //const geometryHelper = new CylinderGeometryHelper()
+    const json = await new TTFLoader().loadAsync('./GowunDodum-Regular.ttf')  // Font 데이터 Json 객체로 로드
+    const font = new Font(json) // Json 객체를 이용해 폰트 객체 생성
+    const geometryHelper = new TextGeometryHelper(font);
+
 
     const createModel = () => {
 
       const geometry = geometryHelper.createGeometry()
-      
+
       const mesh = new THREE.Mesh(geometry, meshMaterial)
 
       const line = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), lineMaterial)
@@ -123,7 +273,7 @@ class App {
 
       const oldModel = this.scene.getObjectByName("cube")
 
-      if(oldModel){
+      if (oldModel) {
         (oldModel.children[0] as THREE.Mesh).geometry.dispose();
         (oldModel.children[1] as THREE.LineSegments).geometry.dispose()
         this.scene.remove(oldModel)
