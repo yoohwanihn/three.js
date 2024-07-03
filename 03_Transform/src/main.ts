@@ -48,7 +48,15 @@ class App {
     const geomBox = new THREE.BoxGeometry(1)
     const material = new THREE.MeshStandardMaterial()
     const box = new THREE.Mesh(geomBox, material)
-    this.scene.add(box)
+
+    box.position.set(0, 0, 0)
+    box.rotation.x = THREE.MathUtils.degToRad(45)
+    box.scale.set(4, 4, 4);
+
+    this.scene.add(box) // 박스 추가
+
+    const axesOfScene = new THREE.AxesHelper(5)
+    this.scene.add(axesOfScene) // 좌표축 추가
   }
  
   //실제 이벤트와 렌더링 처리를 다룰 메서드
