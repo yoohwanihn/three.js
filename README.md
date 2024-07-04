@@ -31,7 +31,7 @@ https://github.com/mrdoob/three.js/tree/master
            - Material : 3차원 모델의 색상이나 투명도를 나타냄
 
 # 1. Cube_Rotation 
-![GIF 2024-07-04 오후 4-55-57](https://github.com/yoohwanihn/three.js/assets/73772238/b40878c6-2d50-4e41-98c0-8543b493609b)
+![GIF 2024-07-04 오후 4-55-57](https://github.com/yoohwanihn/three.js/assets/73772238/b40878c6-2d50-4e41-98c0-8543b493609b) <br>
 https://yoohwanihn.tistory.com/55
 
 # 2. Geometry
