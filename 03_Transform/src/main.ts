@@ -29,7 +29,7 @@ class App {
     const height = this.domApp.clientHeight
     
     this.camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100)
-    this.camera.position.z = 20  // (0, 0, 20)
+    this.camera.position.z = 5  // (0, 0, 5)
 
     new OrbitControls(this.camera, this.domApp as HTMLElement)
   }
@@ -45,18 +45,47 @@ class App {
   }
  
   private setupModels(){
-    const geomBox = new THREE.BoxGeometry(1)
-    const material = new THREE.MeshStandardMaterial()
-    const box = new THREE.Mesh(geomBox, material)
+    const axisHelper = new THREE.AxesHelper(10) // 좌표축
+    this.scene.add(axisHelper)
 
-    box.position.set(0, 0, 0)
-    box.rotation.x = THREE.MathUtils.degToRad(45)
-    box.scale.set(4, 4, 4);
+    const geomGround = new THREE.PlaneGeometry(5, 5) // ground (5x5)
+    const matGround = new THREE.MeshStandardMaterial()
+    const ground = new THREE.Mesh(geomGround, matGround)
+    ground.rotation.x = -THREE.MathUtils.degToRad(90)
+    ground.position.y = -.5
+    this.scene.add(ground)
 
-    this.scene.add(box) // 박스 추가
+    const geomBigSphere = new THREE.SphereGeometry(1, 32, 16, 9, THREE.MathUtils.degToRad(360), 0, THREE.MathUtils.degToRad(90))
+    const matBigSphere = new THREE.MeshStandardMaterial();
+    const bigSphere = new THREE.Mesh(geomBigSphere,matBigSphere)
+    bigSphere.position.y = -.5
+    this.scene.add(bigSphere)
 
-    const axesOfScene = new THREE.AxesHelper(5)
-    this.scene.add(axesOfScene) // 좌표축 추가
+    const geomSmallSphere = new THREE.SphereGeometry(0.2)
+    const matSmallSphere = new THREE.MeshStandardMaterial()
+    const smallSphere = new THREE.Mesh(geomSmallSphere, matSmallSphere)
+
+    const smallSpherePivot = new THREE.Object3D();
+    smallSpherePivot.add(smallSphere)
+    bigSphere.add(smallSpherePivot);
+    smallSphere.position.x = 2
+    smallSpherePivot.rotation.y = THREE.MathUtils.degToRad(-45)
+    smallSphere.position.y = 0.5 // bigSphere의 y position이 -.5기 때문에
+    smallSpherePivot.name = "smallSpherePivot"  // update에서 접근하기 쉽게 명명함
+
+    const cntItems = 8
+    const geomTorus = new THREE.TorusGeometry(0.3, 0.1)
+    const matTorus = new THREE.MeshStandardMaterial()
+    for(let i=0; i<cntItems; i++){
+      const torus = new THREE.Mesh(geomTorus, matTorus)
+      const torusPivot = new THREE.Object3D() // Torus 역시 반 구를 기준으로 회전하면서 8개를 생성하기 때문에 피봇이 필요함
+      bigSphere.add(torusPivot)
+
+      torus.position.x = 2  // smallSphere의 x 포지션과 일치하게함
+      torusPivot.position.y = 0.5 // bigSphere의 y 포지션이 -.5임
+      torusPivot.rotation.y = THREE.MathUtils.degToRad(360) / cntItems * i 
+      torusPivot.add(torus)
+    }
   }
  
   //실제 이벤트와 렌더링 처리를 다룰 메서드
@@ -85,6 +114,11 @@ class App {
  
   private update(time: number){
     time *= 0.001 // ms -> s 단위로 변경
+
+    const smallSpherePivot = this.scene.getObjectByName("smallSpherePivot")
+    if(smallSpherePivot){
+      smallSpherePivot.rotation.y = time;
+    }
   }
  
   private render(time: number){
