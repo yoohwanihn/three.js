@@ -12,7 +12,7 @@ interface IGeometryHelper {
 
 class TextGeometryHelper implements IGeometryHelper{
   private args = {
-    text: "ㅁㄴㅇㄻㄴㅇㄹ",
+    text: "치타 유환인",
     size: .5,
     height: .1,
     curveSegments: 2,
