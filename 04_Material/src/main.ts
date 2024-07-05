@@ -1,5 +1,7 @@
-import './style.css'
 import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/Addons.js'
+import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js'
+import './style.css'
 
 class App {
   private renderer: THREE.WebGLRenderer //Renderer Field 추가
@@ -29,6 +31,8 @@ class App {
     
     this.camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100)
     this.camera.position.z = 2  // (0, 0, 2)
+
+    new OrbitControls(this.camera, this.domApp as HTMLElement)
   }
 
   private setupLight(){
@@ -44,12 +48,17 @@ class App {
   private setupModels(){
     const geometry = new THREE.SphereGeometry()
     const material = new THREE.PointsMaterial({
-      color: 0xff0000,
+      color: "Green", //0xff0000
       size: 5,
-      sizeAttenuation: false
+      sizeAttenuation: true  // point의 크기가 camera의 거리에 따라 조절되도록 하는 option
     })
+
+    material.color = new THREE.Color(0xff0000);
     const points = new THREE.Points(geometry, material)
     this.scene.add(points)
+
+    const gui = new GUI()
+    gui.add(material, "size", 0.1, 10, 0.01)
   }
 
   //실제 이벤트와 렌더링 처리를 다룰 메서드
