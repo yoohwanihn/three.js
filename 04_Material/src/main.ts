@@ -46,19 +46,28 @@ class App {
   }
 
   private setupModels(){
-    const geometry = new THREE.SphereGeometry()
-    const material = new THREE.PointsMaterial({
-      color: "Green", //0xff0000
-      size: 5,
-      sizeAttenuation: true  // point의 크기가 camera의 거리에 따라 조절되도록 하는 option
+    const vertices = [
+      -1, 1, 0, // (-1,1,0)
+      1, 1, 0,  // (1,1,0)
+      -1, -1, 0,// (-1,-1,0)
+      1, -1, 0  // (1,-1,0)
+    ] //
+
+    const geometry = new THREE.BufferGeometry() // 사용자 정의 Geometry는 BufferGeometry를 사용함
+
+    geometry.setAttribute("position",
+        new THREE.Float32BufferAttribute(vertices, 3)) // 하나의 값이 32비트 실수 데이터들이 저장된 Buffer 객체
+    
+    const material = new THREE.LineDashedMaterial({
+      color: 0xffff00,
+      dashSize: 0.2,
+      gapSize: 0.1,
+      scale: 1
     })
 
-    material.color = new THREE.Color(0xff0000);
-    const points = new THREE.Points(geometry, material)
-    this.scene.add(points)
-
-    const gui = new GUI()
-    gui.add(material, "size", 0.1, 10, 0.01)
+    const line = new THREE.Line(geometry,material)
+    line.computeLineDistances() //DashedMaterial Line 계산
+    this.scene.add(line)
   }
 
   //실제 이벤트와 렌더링 처리를 다룰 메서드
