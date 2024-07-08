@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
-import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js'
 import './style.css'
 
 class App {
@@ -65,7 +64,7 @@ class App {
       scale: 1
     })
 
-    const line = new THREE.Line(geometry,material)
+    const line = new THREE.LineSegments(geometry,material)
     line.computeLineDistances() //DashedMaterial Line 계산
     this.scene.add(line)
   }
