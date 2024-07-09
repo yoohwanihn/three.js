@@ -45,28 +45,28 @@ class App {
   }
 
   private setupModels(){
-    const vertices = [
-      -1, 1, 0, // (-1,1,0)
-      1, 1, 0,  // (1,1,0)
-      -1, -1, 0,// (-1,-1,0)
-      1, -1, 0  // (1,-1,0)
-    ] //
+    const material = new THREE.MeshLambertMaterial({
+      color: '#d25383',
+      emissive: 0x555500,
+      wireframe: false,  // wireframe 옵션
 
-    const geometry = new THREE.BufferGeometry() // 사용자 정의 Geometry는 BufferGeometry를 사용함
-
-    geometry.setAttribute("position",
-        new THREE.Float32BufferAttribute(vertices, 3)) // 하나의 값이 32비트 실수 데이터들이 저장된 Buffer 객체
-    
-    const material = new THREE.LineDashedMaterial({
-      color: 0xffff00,
-      dashSize: 0.2,
-      gapSize: 0.1,
-      scale: 1
+      visible: true,     // 렌더링 시 모델이 보일지 안보일지
+      transparent: false, // opacity 옵션을 사용할지 여부
+      opacity: 1,      // material의 불투명 (0~1)
+      depthTest: true,  // 렌더링 되고있는 Mesh를 표현하는 픽셀의 z값과 depth버퍼에 저장된 동일한 위치의 z값을 비교 검사할지 여부
+      depthWrite: true,  // 렌더링 되고있는 Mesh의 픽셀에 대한 z값을 depth버퍼에 저장할 것인지 여부
+      side: THREE.FrontSide
     })
 
-    const line = new THREE.LineSegments(geometry,material)
-    line.computeLineDistances() //DashedMaterial Line 계산
-    this.scene.add(line)
+    const geomCylinder = new THREE.CylinderGeometry(0.6, 0.9, 1.2, 64, 1)
+    const cylinder = new THREE.Mesh(geomCylinder, material)
+    cylinder.position.x = -1
+    this.scene.add(cylinder)
+
+    const geomTorusknot = new THREE.TorusKnotGeometry(0.4 ,0.18, 128, 64)
+    const torusknot = new THREE.Mesh(geomTorusknot,material)
+    torusknot.position.x = 1
+    this.scene.add(torusknot) 
   }
 
   //실제 이벤트와 렌더링 처리를 다룰 메서드
