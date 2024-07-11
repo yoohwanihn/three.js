@@ -30,12 +30,16 @@ class App {
     const height = this.domApp.clientHeight
 
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100)
-    this.camera.position.z = 2  // (0, 0, 2)
+    this.camera.position.z = 4  // (0, 0, 4)
 
     new OrbitControls(this.camera, this.domApp as HTMLElement)
   }
 
   private setupLight() {
+    // const light = new THREE.DirectionalLight(0xffffff, 1)
+    // light.position.set(1,2,1)
+    // this.scene.add(light)
+
     /** HDRI */
     const rgbeLoader = new RGBELoader()  //HDRI를 사용하기 위한 로더 객체
     rgbeLoader.load('./red_hill_cloudy_4k.hdr', (environmentMap) => {
@@ -46,60 +50,44 @@ class App {
   }
 
   private setupModels() {
-    const material = new THREE.MeshPhysicalMaterial({
-      color: 0xff0000,
-      emissive: 0x00000,  // 광원의 영향을 받지 않고 재질이 방출하는 color. default black
-      roughness: 0,       // 표면 거칠기 속성 (0~1 사이)
-      metalness: 0,       // 금속성 (0~1). 값1은 완전한 금속
-      clearcoat: 0,       // 모델 표면의 코팅 효과 (0~1 사이)
-      clearcoatRoughness: 0,  // 코팅의 거칠기 값 (0~1 사이)
-      transmission: 0,        // 투명한 정도 
-      ior: 1.5,               // 굴절률
-      thickness: 0.1,         // 유리의 두께
-      sheen: 0,               // 비단이나 fabric 원단의 실루엣처럼 빛나는 효과
-      sheenRoughness: 0,      // 실루엣이 빛나는 정도 조절
-      sheenColor: 0xfffff,    // 실루엣의 색상
-      iridescence: 0,         // 무지개색 효과의 강도 조절
-      iridescenceIOR: 0,       // 무지개색 효과가 발생하는 굴절률 조절
-      iridescenceThicknessRange: [100, 800],    // 무지개색 효과가 나타나는 두께 범위
+    const textureLoader = new THREE.TextureLoader() // three.js는 이미지를 로드할 때 텍스쳐 타입으로 해야함
+    const texture = textureLoader.load("./uv_grid_opengl.jpg")
+    texture.colorSpace = THREE.SRGBColorSpace
 
-      flatShading: false,    // Mesh를 이루는 면을 평평하게 표현할지 여부
-      wireframe: false,  // wireframe 옵션
-      visible: true,     // 렌더링 시 모델이 보일지 안보일지
-      transparent: false, // opacity 옵션을 사용할지 여부
-      opacity: 1,      // material의 불투명 (0~1)
-      depthTest: true,  // 렌더링 되고있는 Mesh를 표현하는 픽셀의 z값과 depth버퍼에 저장된 동일한 위치의 z값을 비교 검사할지 여부
-      depthWrite: true,  // 렌더링 되고있는 Mesh의 픽셀에 대한 z값을 depth버퍼에 저장할 것인지 여부
-      side: THREE.FrontSide // 앞면 or 뒷면 or 양면 렌더링 옵션 (default FrontSide)
+    texture.repeat.x = 1  //default 1
+    texture.repeat.y = 1  //default 1
+
+    texture.wrapS = THREE.ClampToEdgeWrapping
+    texture.wrapT = THREE.ClampToEdgeWrapping
+
+    texture.offset.x = 0  // UV 좌표의 시작 위치
+    texture.offset.y = 0  // UV 좌표의 시작 위치
+
+    // texture.rotation = THREE.MathUtils.degToRad(45)
+    // texture.center.x = 0.5
+    // texture.center.y = 0.5
+
+    texture.magFilter = THREE.LinearFilter // Texture 이미지 원래 크기보다 더 축소되어 렌더링 될 때 쓰는 필터
+    //texture.minFilter = THREE.LinearMipMapLinearFilter;  // Texture 이미지 원래 크기보다 더 축소되어 렌더링 될 때 쓰는 필터
+    //texture.minFilter = THREE.NearestFilter;
+    //texture.minFilter = THREE.LinearFilter;
+    //texture.minFilter = THREE.NearestMipmapNearestFilter
+    //texture.minFilter = THREE.LinearMipmapNearestFilter
+    texture.minFilter = THREE.LinearMipmapLinearFilter
+
+    const material = new THREE.MeshStandardMaterial({
+      map: texture
     })
 
-    const gui = new GUI()
-    gui.addColor(material, "color").onChange(v => material.color = v)
-    gui.addColor(material, "emissive").onChange(v => material.color = v)
-    gui.add(material, "roughness", 0, 1, 0.01)
-    gui.add(material, "metalness", 0, 1, 0.01)
-    gui.add(material, "clearcoat", 0, 1, 0.01)
-    gui.add(material, "clearcoatRoughness", 0, 1, 0.01)
-    gui.add(material, "transmission", 0, 1, 0.01)
-    gui.add(material, "ior", 1, 2.333, 0.01)
-    gui.add(material, "thickness", 0, 10, 0.01)
-    gui.add(material, "sheen", 0, 1, 0.01)
-    gui.add(material, "sheenRoughness", 0, 1, 0.01)
-    gui.addColor(material, "sheenColor").onChange(v => material.sheenColor = new THREE.Color(v))
-    gui.add(material, "iridescence", 0, 1, 0.01)
-    gui.add(material, "iridescenceIOR", 1, 2.333, 0.01)
-    gui.add(material.iridescenceThicknessRange, "0", 1, 1000, 1)
-    gui.add(material.iridescenceThicknessRange, "1", 1, 1000, 1)
+    const geomBox = new THREE.BoxGeometry(1, 1, 1)
+    const box = new THREE.Mesh(geomBox, material)
+    box.position.x = -1
+    this.scene.add(box)
 
-    const geomCylinder = new THREE.CylinderGeometry(0.6, 0.9, 1.2, 64, 1)
-    const cylinder = new THREE.Mesh(geomCylinder, material)
-    cylinder.position.x = -1
-    this.scene.add(cylinder)
-
-    const geomTorusknot = new THREE.TorusKnotGeometry(0.4, 0.18, 128, 64)
-    const torusknot = new THREE.Mesh(geomTorusknot, material)
-    torusknot.position.x = 1
-    this.scene.add(torusknot)
+    const geomSphere = new THREE.SphereGeometry(0.6)
+    const sphere = new THREE.Mesh(geomSphere, material)
+    sphere.position.x = 1
+    this.scene.add(sphere)
   }
 
   //실제 이벤트와 렌더링 처리를 다룰 메서드
