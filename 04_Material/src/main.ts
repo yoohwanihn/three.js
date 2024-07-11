@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { OrbitControls, RGBELoader } from 'three/examples/jsm/Addons.js'
+import { OrbitControls, RGBELoader, VertexNormalsHelper } from 'three/examples/jsm/Addons.js'
 import './style.css'
 import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js'
 
@@ -51,43 +51,43 @@ class App {
 
   private setupModels() {
     const textureLoader = new THREE.TextureLoader() // three.js는 이미지를 로드할 때 텍스쳐 타입으로 해야함
-    const texture = textureLoader.load("./uv_grid_opengl.jpg")
-    texture.colorSpace = THREE.SRGBColorSpace
+    
+    const map = textureLoader.load("./Glass_Window_002_basecolor.jpg")
+    map.colorSpace = THREE.SRGBColorSpace
 
-    texture.repeat.x = 1  //default 1
-    texture.repeat.y = 1  //default 1
-
-    texture.wrapS = THREE.ClampToEdgeWrapping
-    texture.wrapT = THREE.ClampToEdgeWrapping
-
-    texture.offset.x = 0  // UV 좌표의 시작 위치
-    texture.offset.y = 0  // UV 좌표의 시작 위치
-
-    // texture.rotation = THREE.MathUtils.degToRad(45)
-    // texture.center.x = 0.5
-    // texture.center.y = 0.5
-
-    texture.magFilter = THREE.LinearFilter // Texture 이미지 원래 크기보다 더 축소되어 렌더링 될 때 쓰는 필터
-    //texture.minFilter = THREE.LinearMipMapLinearFilter;  // Texture 이미지 원래 크기보다 더 축소되어 렌더링 될 때 쓰는 필터
-    //texture.minFilter = THREE.NearestFilter;
-    //texture.minFilter = THREE.LinearFilter;
-    //texture.minFilter = THREE.NearestMipmapNearestFilter
-    //texture.minFilter = THREE.LinearMipmapNearestFilter
-    texture.minFilter = THREE.LinearMipmapLinearFilter
+    const mapAO = textureLoader.load("./Glass_Window_002_ambientOcclusion.jpg")
+    const mapHeight = textureLoader.load("./Glass_Window_002_height.png")
+    const mapNormal = textureLoader.load("./Glass_Window_002_normal.jpg")
+    const mapRoughness = textureLoader.load("./Glass_Window_002_roughness.jpg")
+    const mapMetalic = textureLoader.load("./Glass_Window_002_metallic.jpg")
+    const mapAlpha = textureLoader.load("./Glass_Window_002_opacity.jpg")
 
     const material = new THREE.MeshStandardMaterial({
-      map: texture
+      map: map,
+      normalMap: mapNormal,
+      normalScale: new THREE.Vector2(1, 10),
+      displacementMap: mapHeight,
+      displacementScale: 0.2,  //default 1
+      displacementBias: -0.15,
+      aoMap: mapAO,
+      aoMapIntensity: 1, //aoMap 강도
     })
 
-    const geomBox = new THREE.BoxGeometry(1, 1, 1)
+    const geomBox = new THREE.BoxGeometry(1, 1, 1, 256, 256, 256)
     const box = new THREE.Mesh(geomBox, material)
     box.position.x = -1
     this.scene.add(box)
 
-    const geomSphere = new THREE.SphereGeometry(0.6)
+    const geomSphere = new THREE.SphereGeometry(0.6, 512, 256)
     const sphere = new THREE.Mesh(geomSphere, material)
     sphere.position.x = 1
     this.scene.add(sphere)
+
+    //const boxHelper = new VertexNormalsHelper(box, 0.1, 0xffff00)
+    //this.scene.add(boxHelper)
+
+    //const sphereHelper = new VertexNormalsHelper(sphere, 0.1, 0xffff00)
+    //this.scene.add(sphereHelper)
   }
 
   //실제 이벤트와 렌더링 처리를 다룰 메서드
