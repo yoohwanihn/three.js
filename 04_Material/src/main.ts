@@ -65,12 +65,19 @@ class App {
     const material = new THREE.MeshStandardMaterial({
       map: map,
       normalMap: mapNormal,
-      normalScale: new THREE.Vector2(1, 10),
+      normalScale: new THREE.Vector2(1, 1),
       displacementMap: mapHeight,
       displacementScale: 0.2,  //default 1
       displacementBias: -0.15,
       aoMap: mapAO,
-      aoMapIntensity: 1, //aoMap 강도
+      aoMapIntensity: 1.5, //aoMap 강도
+      roughnessMap: mapRoughness,
+      roughness: 0.8,  //default 1(100%)
+      metalnessMap: mapMetalic,
+      metalness: 1,  //default 0 
+      alphaMap: mapAlpha,
+      transparent: true,  //alphaMap 사용 시 true 필수
+      side: THREE.DoubleSide
     })
 
     const geomBox = new THREE.BoxGeometry(1, 1, 1, 256, 256, 256)
