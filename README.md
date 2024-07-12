@@ -50,6 +50,9 @@ https://yoohwanihn.tistory.com/61 <br>
 https://yoohwanihn.tistory.com/62 <br>
 
 # 4. Material
+![GIF 2024-07-12 오전 10-36-49](https://github.com/user-attachments/assets/e54a431b-0021-4696-a5c8-7a7fd19ca280)
+![GIF 2024-07-12 오전 10-37-30](https://github.com/user-attachments/assets/c1dbe575-3da4-4c48-8f46-eb6bcc177c3e)
+
 https://yoohwanihn.tistory.com/63 <br>
 https://yoohwanihn.tistory.com/64 <br>
 https://yoohwanihn.tistory.com/65 <br>
