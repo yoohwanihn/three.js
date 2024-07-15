@@ -61,4 +61,6 @@ https://yoohwanihn.tistory.com/67 <br>
 https://yoohwanihn.tistory.com/68 <br>
 
 # 5. Light
+![GIF 2024-07-15 오후 4-20-19](https://github.com/user-attachments/assets/5dc6e06e-9e73-42e9-8249-7dac5cc70d0a)
+
 https://yoohwanihn.tistory.com/70
