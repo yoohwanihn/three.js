@@ -1,6 +1,7 @@
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
 import './style.css'
 import * as THREE from 'three'
+import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js'
 
 class App {
   private renderer: THREE.WebGLRenderer //Renderer Field 추가
@@ -9,12 +10,20 @@ class App {
   private camera?: THREE.PerspectiveCamera //?를 붙이면 PerspectiveCamera Type이나 Undefined Type을 가질 수 있음.(Optional Properties)
 
   /*
+  //Directional Light
   private light?: THREE.DirectionalLight
   private helper?: THREE.DirectionalLightHelper
   */
 
+  /*
+  //Point Light
   private light?: THREE.PointLight
   private helper?: THREE.PointLightHelper
+  */
+
+  //Spot Light
+  private light?: THREE.SpotLight
+  private helper?: THREE.SpotLightHelper
 
   constructor() {
     console.log("YooHwanIhn");
@@ -47,6 +56,7 @@ class App {
     //const light = new THREE.HemisphereLight("#b0d8f5", "#bb7a1c",1)
 
     /*
+    //Directional Light
     const light = new THREE.DirectionalLight(0xffffff, 1)
     light.position.set(0, 1, 0)
     light.target.position.set(0, 0, 0)
@@ -60,6 +70,8 @@ class App {
     this.scene.add(light)
     */
 
+    /*
+    //Point Light
     const light = new THREE.PointLight(0xffffff, 20)
     light.position.set(0, 5, 0)
     light.distance = 5  // 광원의 영향을 받을 범위 (default 0 = 모든 범위)
@@ -69,6 +81,27 @@ class App {
     const helper = new THREE.PointLightHelper(light)
     this.scene.add(helper)
     this.helper = helper
+    */
+
+    //Spot Light
+    const light = new THREE.SpotLight(0xffffff, 5)
+    light.position.set(0, 5, 0)
+    light.target.position.set(0, 0, 0)
+    light.angle = THREE.MathUtils.degToRad(40)
+    light.penumbra = 0  // 빛의 감쇠율
+    this.scene.add(light)
+    this.scene.add(light.target)
+
+    const helper = new THREE.SpotLightHelper(light)
+    this.scene.add(helper)
+
+    this.light = light
+    this.helper = helper
+
+    const gui = new GUI()
+    gui.add(light, 'angle', 0, Math.PI/2, 0.01).onChange(() => helper.update())
+    gui.add(light, 'penumbra', 0, 1, 0.01).onChange(() => helper.update())
+
   }
 
   private setupModels() {
@@ -174,7 +207,14 @@ class App {
       this.helper!.update() // this.helper가 null이나 undefined가 아님
       */
 
+      /*
+      // Point Light
       smallSphere.getWorldPosition(this.light!.position) // smallSphere 위치를 광원의 위치로
+      this.helper!.update()
+      */
+
+      // Spot Light
+      smallSphere.getWorldPosition(this.light!.target.position)
       this.helper!.update()
     }
   }
