@@ -60,9 +60,11 @@ https://yoohwanihn.tistory.com/65 <br>
 https://yoohwanihn.tistory.com/66 <br>
 https://yoohwanihn.tistory.com/67 <br>
 https://yoohwanihn.tistory.com/68 <br>
+https://yoohwanihn.tistory.com/69 <br>
 
 # 5. Light
 ![GIF 2024-07-12 오후 8-49-11](https://github.com/user-attachments/assets/e8f8e2e8-7e48-4bf3-b30c-eb4964d8a18e)
 ![GIF 2024-07-15 오후 4-20-19](https://github.com/user-attachments/assets/5dc6e06e-9e73-42e9-8249-7dac5cc70d0a)
 
-https://yoohwanihn.tistory.com/70
+https://yoohwanihn.tistory.com/70 <br>
+https://yoohwanihn.tistory.com/71 <br>

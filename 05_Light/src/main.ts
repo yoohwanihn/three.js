@@ -2,6 +2,7 @@ import { OrbitControls } from 'three/examples/jsm/Addons.js'
 import './style.css'
 import * as THREE from 'three'
 import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js'
+import { RectAreaLightUniformsLib, RectAreaLightHelper } from 'three/examples/jsm/Addons.js'
 
 class App {
   private renderer: THREE.WebGLRenderer //Renderer Field 추가
@@ -21,9 +22,11 @@ class App {
   private helper?: THREE.PointLightHelper
   */
 
+  /*
   //Spot Light
   private light?: THREE.SpotLight
   private helper?: THREE.SpotLightHelper
+  */
 
   constructor() {
     console.log("YooHwanIhn");
@@ -83,6 +86,7 @@ class App {
     this.helper = helper
     */
 
+    /*
     //Spot Light
     const light = new THREE.SpotLight(0xffffff, 5)
     light.position.set(0, 5, 0)
@@ -101,7 +105,16 @@ class App {
     const gui = new GUI()
     gui.add(light, 'angle', 0, Math.PI/2, 0.01).onChange(() => helper.update())
     gui.add(light, 'penumbra', 0, 1, 0.01).onChange(() => helper.update())
+    */
 
+    RectAreaLightUniformsLib.init()
+    const light = new THREE.RectAreaLight(0xffffff, 10, 3, 0.5)
+    light.position.set(0, 5, 0)
+    light.rotation.x = THREE.MathUtils.degToRad(-90)
+    this.scene.add(light)
+
+    const helper = new RectAreaLightHelper(light)
+    light.add(helper)
   }
 
   private setupModels() {
@@ -213,9 +226,11 @@ class App {
       this.helper!.update()
       */
 
+      /*
       // Spot Light
       smallSphere.getWorldPosition(this.light!.target.position)
       this.helper!.update()
+      */
     }
   }
 
