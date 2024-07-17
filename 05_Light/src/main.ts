@@ -3,6 +3,8 @@ import './style.css'
 import * as THREE from 'three'
 import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js'
 import { RectAreaLightUniformsLib, RectAreaLightHelper } from 'three/examples/jsm/Addons.js'
+import { RGBELoader } from 'three/examples/jsm/Addons.js'
+import { texture } from 'three/examples/jsm/nodes/Nodes.js'
 
 class App {
   private renderer: THREE.WebGLRenderer //Renderer Field 추가
@@ -34,7 +36,7 @@ class App {
     this.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio)) // 고해상도에서 깨짐 방지를 위해 픽셀 비율 지정
 
     this.domApp = document.querySelector('#app')!
-    this.domApp.appendChild(this.renderer.domElement) // renderer.domeElement : canvas Type의 DOM 객체
+    this.domApp.appendChild(this.renderer.domElement) // renderer.domElement : canvas Type의 DOM 객체
 
     this.scene = new THREE.Scene()
 
@@ -107,7 +109,9 @@ class App {
     gui.add(light, 'penumbra', 0, 1, 0.01).onChange(() => helper.update())
     */
 
-    RectAreaLightUniformsLib.init()
+    /*
+    //RectAreaLight
+    RectAreaLightUniformsLib.init() //RectAreaLight 광원은 먼저 초기화를 해줘야함.
     const light = new THREE.RectAreaLight(0xffffff, 10, 3, 0.5)
     light.position.set(0, 5, 0)
     light.rotation.x = THREE.MathUtils.degToRad(-90)
@@ -115,6 +119,19 @@ class App {
 
     const helper = new RectAreaLightHelper(light)
     light.add(helper)
+    */
+
+    // HDRI
+    new RGBELoader().load("./hayloft_4k.hdr", (texture) => {
+      texture.mapping = THREE.EquirectangularRefractionMapping
+
+      this.scene.environment = texture  //광원
+      this.scene.background = texture   //배경
+
+      this.renderer.toneMapping = THREE.AgXToneMapping  // 광원의 세기 지정
+      this.renderer.toneMappingExposure = 0.2 //default 1
+    })
+
   }
 
   private setupModels() {
