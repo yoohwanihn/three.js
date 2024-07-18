@@ -7,6 +7,7 @@ class App {
   private domApp: Element 
   private scene: THREE.Scene
   private camera?: THREE.PerspectiveCamera //?를 붙이면 PerspectiveCamera Type이나 Undefined Type을 가질 수 있음.(Optional Properties)
+  //private camera?: THREE.OrthographicCamera //?를 붙이면 OrthographicCamera Type이나 Undefined Type을 가질 수 있음.(Optional Properties)
   
   constructor(){
     console.log("YooHwanIhn");
@@ -28,10 +29,24 @@ class App {
     const width = this.domApp.clientWidth
     const height = this.domApp.clientHeight
     
-    this.camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100)
-    this.camera.position.set(0, 0, 5)  // (0, 0, 5)
+    this.camera = new THREE.PerspectiveCamera(
+      75,
+      width / height,
+      0.1, 
+      100
+    )
 
-    this.camera.lookAt(new THREE.Vector3(2, 0, 0))
+    // const aspect = width / height
+    // this.camera = new THREE.OrthographicCamera(
+    //   -1*aspect, 1*aspect,  // xLeft, xRight
+    //    1, -1, // yTop, yBottom
+    //     0.1, 100  // zNear, zFar
+    // )
+    //this.camera.zoom = 0.2
+
+    this.camera.position.set(2, 2, 3.5)  // (2, 2, 3.5)
+
+    this.camera.lookAt(new THREE.Vector3(0, 0, 0))
 
     //new OrbitControls(this.camera, this.domApp as HTMLElement)
   }
@@ -124,6 +139,10 @@ class App {
     const camera = this.camera
     if(camera){
       camera.aspect = width / height
+      // const aspect = width / height
+      // camera.left = -1*aspect 
+      // camera.right = 1*aspect
+
       camera.updateProjectionMatrix() // 카메라의 값이 변경되었다면 수정하도록 함.
     }
  
@@ -136,7 +155,16 @@ class App {
 
     const smallSpherePivot = this.scene.getObjectByName("smallSpherePivot")
     if(smallSpherePivot){
-      smallSpherePivot.rotation.y = time;
+      //smallSpherePivot.rotation.y = time;
+      const euler = new THREE.Euler(0, time, 0)
+      const quaternion = new THREE.Quaternion().setFromEuler(euler)
+      smallSpherePivot.setRotationFromQuaternion(quaternion)
+      //smallSpherePivot.quaternion.setFromEuler(euler)
+
+      const redSphere = smallSpherePivot.children[0]  // 빨간색 구체 mesh
+      const target = new THREE.Vector3()  // 빨간색 구의 좌표
+      redSphere.getWorldPosition(target)  
+      this.camera?.lookAt(target)
     }
   }
  

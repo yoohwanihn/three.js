@@ -117,7 +117,12 @@ class App {
 
     const smallSpherePivot = this.scene.getObjectByName("smallSpherePivot")
     if(smallSpherePivot){
-      smallSpherePivot.rotation.y = time;
+      //smallSpherePivot.rotation.y = time;
+      const euler = new THREE.Euler(0, time, 0)
+      const quaternion = new THREE.Quaternion().setFromEuler(euler)
+      smallSpherePivot.setRotationFromQuaternion(quaternion)
+      //smallSpherePivot.quaternion.setFromEuler(euler)
+
     }
   }
  
