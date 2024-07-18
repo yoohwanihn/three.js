@@ -72,6 +72,10 @@ https://yoohwanihn.tistory.com/71 <br>
 https://yoohwanihn.tistory.com/72 <br>
 
 # 6. Camera
+![GIF 2024-07-17 오후 6-09-15](https://github.com/user-attachments/assets/bf8f72e2-36a6-4179-8532-7b1fc4f0cb10)
+![GIF 2024-07-18 오전 11-05-07](https://github.com/user-attachments/assets/013e2bb1-a900-4bf4-94df-511e38bf345e)
+![GIF 2024-07-18 오후 1-57-08](https://github.com/user-attachments/assets/b9ad707f-6f25-412a-bab4-06eeb24b1ae3)
+
 https://yoohwanihn.tistory.com/73 <br>
 https://yoohwanihn.tistory.com/74 <br>
 https://yoohwanihn.tistory.com/75 <br>
