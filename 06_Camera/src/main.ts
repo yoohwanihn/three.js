@@ -1,38 +1,38 @@
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
 import './style.css'
 import * as THREE from 'three'
- 
+
 class App {
   private renderer: THREE.WebGLRenderer //Renderer Field 추가
-  private domApp: Element 
+  private domApp: Element
   private scene: THREE.Scene
   private camera?: THREE.PerspectiveCamera //?를 붙이면 PerspectiveCamera Type이나 Undefined Type을 가질 수 있음.(Optional Properties)
   //private camera?: THREE.OrthographicCamera //?를 붙이면 OrthographicCamera Type이나 Undefined Type을 가질 수 있음.(Optional Properties)
-  
-  constructor(){
+
+  constructor() {
     console.log("YooHwanIhn");
-    this.renderer = new THREE.WebGLRenderer({antialias:true}) // 안티-알리아스 : 높은 렌더링 결과를 얻기 위해 픽셀 사이에 계단 현상을 방지하는 효과 추가
+    this.renderer = new THREE.WebGLRenderer({ antialias: true }) // 안티-알리아스 : 높은 렌더링 결과를 얻기 위해 픽셀 사이에 계단 현상을 방지하는 효과 추가
     this.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio)) // 고해상도에서 깨짐 방지를 위해 픽셀 비율 지정
- 
-    this.domApp = document.querySelector('#app')! 
+
+    this.domApp = document.querySelector('#app')!
     this.domApp.appendChild(this.renderer.domElement) // renderer.domeElement : canvas Type의 DOM 객체
- 
+
     this.scene = new THREE.Scene()
- 
+
     this.setupCamera()
     this.setupLight()
     this.setupModels()
     this.setupEvents()
   }
- 
-  private setupCamera(){
+
+  private setupCamera() {
     const width = this.domApp.clientWidth
     const height = this.domApp.clientHeight
-    
+
     this.camera = new THREE.PerspectiveCamera(
       75,
       width / height,
-      0.1, 
+      0.1,
       100
     )
 
@@ -50,18 +50,18 @@ class App {
 
     //new OrbitControls(this.camera, this.domApp as HTMLElement)
   }
- 
-  private setupLight(){
+
+  private setupLight() {
     //빛의 색상 값과 빛의 강도
     const color = 0xffffff  // white
     const intensity = 1
     const light = new THREE.DirectionalLight(color, intensity)  //광원
     light.position.set(-1, 2, 4)
- 
+
     this.scene.add(light)
   }
- 
-  private setupModels(){
+
+  private setupModels() {
     const axisHelper = new THREE.AxesHelper(10) // 좌표축
     this.scene.add(axisHelper)
 
@@ -83,7 +83,7 @@ class App {
       roughness: 0.1,
       metalness: 0.2
     });
-    const bigSphere = new THREE.Mesh(geomBigSphere,matBigSphere)
+    const bigSphere = new THREE.Mesh(geomBigSphere, matBigSphere)
     bigSphere.position.y = -.5
     this.scene.add(bigSphere)
 
@@ -97,11 +97,23 @@ class App {
 
     const smallSpherePivot = new THREE.Object3D();
     smallSpherePivot.add(smallSphere)
-    bigSphere.add(smallSpherePivot);
+    bigSphere.add(smallSpherePivot)
     smallSphere.position.x = 2
     smallSpherePivot.rotation.y = THREE.MathUtils.degToRad(-45)
-    smallSphere.position.y = 0.5 // bigSphere의 y position이 -.5기 때문에
+    smallSpherePivot.position.y = 0.5 // bigSphere의 y position이 -.5기 때문에
     smallSpherePivot.name = "smallSpherePivot"  // update에서 접근하기 쉽게 명명함
+
+    // target용 redSphere
+    // const smallSphere2 = new THREE.Mesh(geomSmallSphere, matSmallSphere)
+    const smallSphere2 = new THREE.Object3D()
+
+    const smallSpherePivot2 = new THREE.Object3D()
+    smallSpherePivot2.add(smallSphere2)
+    bigSphere.add(smallSpherePivot2)
+    smallSphere2.position.x = 2
+    smallSpherePivot2.rotation.y = THREE.MathUtils.degToRad(-45)
+    smallSpherePivot2.position.y = 0.5
+    smallSpherePivot2.name = "targetPivot"
 
     const cntItems = 8
     const geomTorus = new THREE.TorusGeometry(0.3, 0.1)
@@ -110,34 +122,34 @@ class App {
       roughness: 0.5,
       metalness: 0.9
     })
-    for(let i=0; i<cntItems; i++){
+    for (let i = 0; i < cntItems; i++) {
       const torus = new THREE.Mesh(geomTorus, matTorus)
       const torusPivot = new THREE.Object3D() // Torus 역시 반 구를 기준으로 회전하면서 8개를 생성하기 때문에 피봇이 필요함
       bigSphere.add(torusPivot)
 
       torus.position.x = 2  // smallSphere의 x 포지션과 일치하게함
       torusPivot.position.y = 0.5 // bigSphere의 y 포지션이 -.5임
-      torusPivot.rotation.y = THREE.MathUtils.degToRad(360) / cntItems * i 
+      torusPivot.rotation.y = THREE.MathUtils.degToRad(360) / cntItems * i
       torusPivot.add(torus)
     }
   }
- 
+
   //실제 이벤트와 렌더링 처리를 다룰 메서드
-  private setupEvents(){
+  private setupEvents() {
     window.onresize = this.resize.bind(this); // html의 size가 변경될 때마다 호출되는 함수(addEventListener 느낌??)
     this.resize();
- 
+
     this.renderer.setAnimationLoop(this.render.bind(this)) // 연속적으로 render 메서드 호출(모니터 Frame에 맞게)
   }
- 
+
   // html창 resize시 호출할 함수
-  private resize(){
+  private resize() {
     const width = this.domApp.clientWidth
     const height = this.domApp.clientHeight
- 
+
     //앞선 setUpCamera에서 설정한 camera 정보를 다시 수정해줌.
     const camera = this.camera
-    if(camera){
+    if (camera) {
       camera.aspect = width / height
       // const aspect = width / height
       // camera.left = -1*aspect 
@@ -145,35 +157,51 @@ class App {
 
       camera.updateProjectionMatrix() // 카메라의 값이 변경되었다면 수정하도록 함.
     }
- 
+
     //renderer도 마찬가지로 사이즈 수정함
     this.renderer.setSize(width, height)
   }
- 
-  private update(time: number){
+
+  private update(time: number) {
     time *= 0.001 // ms -> s 단위로 변경
 
     const smallSpherePivot = this.scene.getObjectByName("smallSpherePivot")
-    if(smallSpherePivot){
+    if (smallSpherePivot) {
       //smallSpherePivot.rotation.y = time;
       const euler = new THREE.Euler(0, time, 0)
-      const quaternion = new THREE.Quaternion().setFromEuler(euler)
-      smallSpherePivot.setRotationFromQuaternion(quaternion)
+      const quaterion = new THREE.Quaternion().setFromEuler(euler)
+      smallSpherePivot.setRotationFromQuaternion(quaterion)
       //smallSpherePivot.quaternion.setFromEuler(euler)
 
       const redSphere = smallSpherePivot.children[0]  // 빨간색 구체 mesh
       const target = new THREE.Vector3()  // 빨간색 구의 좌표
-      redSphere.getWorldPosition(target)  
-      this.camera?.lookAt(target)
+      redSphere.getWorldPosition(target)
+
+      //this.camera?.lookAt(target)
+      //this.camera?.position.copy(target)
+
+      const smallSpherePivot2 = this.scene.getObjectByName("targetPivot")
+      if(smallSpherePivot2){
+        const euler2= new THREE.Euler(0, time+THREE.MathUtils.degToRad(10),0)
+        const quaterion2 = new THREE.Quaternion().setFromEuler(euler2)
+        smallSpherePivot2.setRotationFromQuaternion(quaterion2)
+
+        const targetPos = smallSpherePivot2.children[0] // target Object3D 객체
+        const cameraTarget = new THREE.Vector3()
+        targetPos.getWorldPosition(cameraTarget)  // target Object3D(smallSphere2)의 위치
+
+        this.camera?.lookAt(cameraTarget)
+        this.camera?.position.copy(target)
+      }
     }
   }
- 
-  private render(time: number){
+
+  private render(time: number) {
     // time : setAnimationLoop의 값에 의해서 결정되는데 단위는 ms
     this.update(time)
- 
+
     this.renderer.render(this.scene, this.camera!)
   }
 }
- 
+
 new App()
