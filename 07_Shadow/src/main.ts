@@ -64,11 +64,23 @@ class App {
     //Directional Light
     const light = new THREE.DirectionalLight(0xffffff, 5)
     light.castShadow = true
-    light.position.set(0, 1, 0)
+    light.position.set(0, 3, 0)
     light.target.position.set(0, 0, 0)
     this.scene.add(light.target)
     this.light = light
     this.scene.add(light)
+
+    light.shadow.camera.top = 5
+    light.shadow.camera.bottom = -5
+    light.shadow.camera.left = -5
+    light.shadow.camera.right = 5
+    light.shadow.camera.near = 0.5
+    light.shadow.camera.far = 500
+
+    light.shadow.mapSize.set(2048, 2048)
+
+    const cameraHelper = new THREE.CameraHelper(light.shadow.camera)
+    this.scene.add(cameraHelper)
 
     const helper = new THREE.DirectionalLightHelper(light)
     this.helper = helper
