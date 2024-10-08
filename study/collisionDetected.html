@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Box Intersection with lil-gui</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lil-gui@0.19.2/dist/lil-gui.css">
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19.2/dist/lil-gui.umd.js"></script>
+
+    <script>
+        // 씬, 카메라, 렌더러 설정
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // OrbitControls 설정
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // 박스 생성
+        const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+        const boxMaterial1 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const boxMaterial2 = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+
+        // 두 개의 박스 생성
+        const box1 = new THREE.Mesh(boxGeometry, boxMaterial1);
+        const box2 = new THREE.Mesh(boxGeometry, boxMaterial2);
+
+        // 위치 설정
+        box1.position.set(0, 0, 0);
+        box2.position.set(0.5, 0, 0); // 박스가 서로 겹치게 위치
+
+        // 박스 씬에 추가
+        scene.add(box1);
+        scene.add(box2);
+
+        // Intersection Box 설정
+        const intersectionBox1 = new THREE.Box3().setFromObject(box1);
+        const intersectionBox2 = new THREE.Box3().setFromObject(box2);
+
+        // 카메라 위치 설정
+        camera.position.z = 5;
+
+        // lil-gui 설정
+        const gui = new lil.GUI(); // lil-gui 인스턴스 생성
+        const boxPositionFolder1 = gui.addFolder('Box 1 Position');
+        boxPositionFolder1.add(box1.position, 'x', -5, 5).name('X Position');
+        boxPositionFolder1.add(box1.position, 'y', -5, 5).name('Y Position');
+        boxPositionFolder1.add(box1.position, 'z', -5, 5).name('Z Position');
+        boxPositionFolder1.open();
+
+        const boxPositionFolder2 = gui.addFolder('Box 2 Position');
+        boxPositionFolder2.add(box2.position, 'x', -5, 5).name('X Position');
+        boxPositionFolder2.add(box2.position, 'y', -5, 5).name('Y Position');
+        boxPositionFolder2.add(box2.position, 'z', -5, 5).name('Z Position');
+        boxPositionFolder2.open();
+
+        // 애니메이션 루프
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // OrbitControls 업데이트
+
+            // Intersection Box 업데이트
+            intersectionBox1.setFromObject(box1);
+            intersectionBox2.setFromObject(box2);
+            checkIntersection();
+
+            renderer.render(scene, camera);
+        }
+
+        function checkIntersection() {
+            if (intersectionBox1.intersectsBox(intersectionBox2)) {
+                console.log('간섭 O');
+            } else {
+                console.log('간섭 X');
+            }
+        }
+
+        animate();
+    </script>
+</body>
+</html>
